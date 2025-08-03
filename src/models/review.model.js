@@ -6,10 +6,10 @@ const reviewSchema = new mongoose.Schema(
       required: [true, "User reference is required"],
     },
 
-    product: {
+    orderedItem: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
-      required: [true, "Product reference is required"],
+      ref: "OrderItem",
+      required: [true, "orderedItem reference is required"],
     },
 
     rating: {

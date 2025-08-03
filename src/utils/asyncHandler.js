@@ -1,7 +1,7 @@
-const asyncHandler = async (fn) => {
+const asyncHandler = (fn) => async (req, res, next) => {
   try {
     await fn(req, res, next);
-  } catch (e) {
-    next(e);
+  } catch (error) {
+    next(error);
   }
 };
