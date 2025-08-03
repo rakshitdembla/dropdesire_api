@@ -38,7 +38,7 @@ import app from "./app.js";
       });
     }
   } catch (e) {
-    console.log(`Error in starting server ${e.toString()}`);
-    throw e;
+    console.error(`❌ Failed to start server: ${e.message}`);
+    process.exit(1);
   }
 })();
