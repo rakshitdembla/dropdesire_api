@@ -29,8 +29,14 @@ const paymentSchema = new mongoose.Schema(
       ref: "Bank",
       required: [true, "Bank reference is required"],
     },
+
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
 
-export const Payment = mongoose.model("Payment", paymentSchema);
+const Payment = mongoose.model("Payment", paymentSchema);
+export default Payment;

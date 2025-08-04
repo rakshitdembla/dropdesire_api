@@ -189,6 +189,12 @@ const productSchema = new mongoose.Schema({
     enum: ["₹", "$"],
     default: "₹",
   },
+
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-export const Product = mongoose.model("Product", productSchema);
+const Product = mongoose.model("Product", productSchema);
+export default Product;

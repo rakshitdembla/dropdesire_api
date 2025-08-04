@@ -78,18 +78,19 @@ const sellerSchema = new mongoose.Schema(
       trim: true,
     },
 
-    isApproved: {
-      type: Boolean,
-      default: false,
-    },
-
     bankAccount: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Bank",
       required: [true, "Bank account is required"],
     },
+
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
 
-export const Seller = mongoose.model("Seller", sellerSchema);
+const Seller = mongoose.model("Seller", sellerSchema);
+export default Seller;

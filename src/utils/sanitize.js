@@ -1,11 +1,9 @@
 import mongoSanitize from "mongo-sanitize";
 import xss from "xss";
 
-const sanitize = async (data) => {
+const sanitize = (data) => {
   if (typeof data === "string") {
-    data = mongoSanitize(xss(data[key]));
-
-    return data;
+    return mongoSanitize(xss(data));
   } else if (typeof data === "object" && data !== null) {
     for (const key in data) {
       if (typeof data[key] === "string") {

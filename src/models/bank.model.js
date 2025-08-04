@@ -40,6 +40,12 @@ const bankSchema = new mongoose.Schema({
     minlength: [6, "IFSC Code must be at least 6 characters"],
     maxlength: [20, "IFSC Code must not exceed 20 characters"],
   },
+
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-export const Bank = mongoose.model("Bank", bankSchema);
+const Bank = mongoose.model("Bank", bankSchema);
+export default Bank;

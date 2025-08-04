@@ -91,6 +91,12 @@ const couponSchema = new mongoose.Schema({
     required: [true, "Usage per user limit is required"],
     min: [0, "usagePerUser cannot be negative"],
   },
+
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-export const Coupon = mongoose.model("Coupon", couponSchema);
+const Coupon = mongoose.model("Coupon", couponSchema);
+export default Coupon;

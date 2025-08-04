@@ -89,10 +89,16 @@ const addressSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-export const Address = mongoose.model("Address", addressSchema);
+const Address = mongoose.model("Address", addressSchema);
+export default Address;

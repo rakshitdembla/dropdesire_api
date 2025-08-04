@@ -39,8 +39,14 @@ const orderSchema = new mongoose.Schema(
       min: [1, "Total amount must be at least ₹1"],
       max: [999999, "Total amount must not exceed ₹999,999"],
     },
+
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
 
-export const Order = mongoose.model("Order", orderSchema);
+const Order = mongoose.model("Order", orderSchema);
+export default Order;

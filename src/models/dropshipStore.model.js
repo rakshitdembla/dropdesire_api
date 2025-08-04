@@ -64,13 +64,16 @@ const dropshipStoreSchema = new mongoose.Schema(
       ref: "Address",
       required: [true, "Store address is required"],
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-export const DropshipStore = mongoose.model(
-  "DropshipStore",
-  dropshipStoreSchema
-);
+const DropshipStore = mongoose.model("DropshipStore", dropshipStoreSchema);
+
+export default DropshipStore;

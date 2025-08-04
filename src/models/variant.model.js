@@ -97,6 +97,12 @@ const variantSchema = new mongoose.Schema({
     enum: ["pending", "approved", "disapproved", "not-stock"],
     default: "pending",
   },
+
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-export const Variant = mongoose.model("Variant", variantSchema);
+const Variant = mongoose.model("Variant", variantSchema);
+export default Variant;

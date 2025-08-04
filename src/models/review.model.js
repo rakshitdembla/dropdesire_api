@@ -26,6 +26,11 @@ const reviewSchema = new mongoose.Schema(
       maxlength: [500, "Comment must not exceed 500 characters"],
     },
 
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+
     images: {
       type: [String],
     },
@@ -33,4 +38,5 @@ const reviewSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const Review = mongoose.model("Review", reviewSchema);
+const Review = mongoose.model("Review", reviewSchema);
+export default Review;

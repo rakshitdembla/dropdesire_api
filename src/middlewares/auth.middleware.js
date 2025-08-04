@@ -1,9 +1,9 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
-import { ApiError } from "../utils/ApiError.js";
-import { asyncHandler } from "../utils/asyncHandler.js";
+import ApiError from "../utils/apiResponse.js";
+import asyncHandler from "../utils/asyncHandler.js";
 
-export const jwtVerify = asyncHandler(async (req, _, next) => {
+const jwtVerify = asyncHandler(async (req, _, next) => {
   try {
     const token =
       req.cookies?.accessToken ||
@@ -23,9 +23,15 @@ export const jwtVerify = asyncHandler(async (req, _, next) => {
       throw new ApiError(401, "Invalid Access Token, User not found.");
     }
 
+    if (user.userStatus !== "active") {
+      throw new ApiError(401, `Your account is in ${user.userStatus} state`);
+    }
+
     req.user = user;
     next();
   } catch (e) {
     throw new ApiError(401, "Invalid access token");
   }
 });
+
+export default jwtVerify;

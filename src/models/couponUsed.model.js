@@ -19,6 +19,12 @@ const couponUsedSchema = new mongoose.Schema({
     ref: "Order",
     required: [true, "Order reference is required"],
   },
+
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-export const CouponUsed = mongoose.model("CouponUsed", couponUsedSchema);
+const CouponUsed = mongoose.model("CouponUsed", couponUsedSchema);
+export default CouponUsed;

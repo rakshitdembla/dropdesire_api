@@ -1,0 +1,14 @@
+import asyncHandler from "../utils/asyncHandler.js";
+import ApiError from "../utils/apiResponse.js";
+
+const verifySuperAdmin = asyncHandler(async (req, _, next) => {
+  const user = req.user;
+
+  if (user.isAdmin && user.adminType === "superadmin") {
+    next();
+  } else {
+    throw new ApiError(401, "You are not authorized as an super-admin.");
+  }
+});
+
+export default verifySuperAdmin;
