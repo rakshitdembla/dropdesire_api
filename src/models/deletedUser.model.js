@@ -48,6 +48,11 @@ const deletedUserSchema = new mongoose.Schema(
       trim: true,
     },
 
+    profilePublicId: {
+      type: String,
+      trim: true,
+    },
+
     isSeller: {
       type: Boolean,
       default: false,
