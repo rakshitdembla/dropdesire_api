@@ -1,7 +1,7 @@
-import DropshipStore from "../../../models/dropshipStore.model.js";
-import ApiError from "../../../utils/apiError.js";
-import asyncHandler from "../../../utils/asyncHandler.js";
-import ApiResponse from "../../../utils/apiResponse.js";
+import DropshipStore from "../../models/dropshipStore.model.js";
+import ApiError from "../../utils/apiError.js";
+import asyncHandler from "../../utils/asyncHandler.js";
+import ApiResponse from "../../utils/apiResponse.js";
 import mongoose from "mongoose";
 
 const deleteDropshipStore = asyncHandler(async (req, res) => {
@@ -24,7 +24,7 @@ const deleteDropshipStore = asyncHandler(async (req, res) => {
   }
 
   // Check if already deleted
-  if (existingStore.userDeleted) {
+  if (existingStore.isDeleted) {
     throw new ApiError(400, "Dropship Store is already deleted.");
   }
 
@@ -37,7 +37,7 @@ const deleteDropshipStore = asyncHandler(async (req, res) => {
   }
 
   // Mark store as deleted
-  existingStore.userDeleted = true;
+  existingStore.isDeleted = true;
   await existingStore.save();
 
   // Return response

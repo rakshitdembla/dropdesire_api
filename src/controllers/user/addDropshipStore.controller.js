@@ -1,8 +1,8 @@
-import DropshipStore from "../../../models/dropshipStore.model.js";
-import ApiError from "../../../utils/apiError.js";
-import asyncHandler from "../../../utils/asyncHandler.js";
-import { uploadOnCloudinary } from "../../../utils/cloudinary.js";
-import ApiResponse from "../../../utils/apiResponse.js";
+import DropshipStore from "../../models/dropshipStore.model.js";
+import ApiError from "../../utils/apiError.js";
+import asyncHandler from "../../utils/asyncHandler.js";
+import { uploadOnCloudinary } from "../../utils/cloudinary.js";
+import ApiResponse from "../../utils/apiResponse.js";
 import validator from "validator";
 import mongoose from "mongoose";
 
@@ -31,7 +31,7 @@ const addDropshipStore = asyncHandler(async (req, res) => {
 
   const existingStores = await DropshipStore.find({
     user: req.user?._id,
-    userDeleted: {
+    isDeleted: {
       $ne: true,
     },
   });
@@ -118,7 +118,7 @@ const addDropshipStore = asyncHandler(async (req, res) => {
     paymentDetails,
     user: req.user._id,
     address,
-  }).select("-userDeleted");
+  }).select("-isDeleted");
 
   // Send Response
   return res

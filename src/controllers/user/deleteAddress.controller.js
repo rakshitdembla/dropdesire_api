@@ -1,7 +1,7 @@
-import Address from "../../../models/address.model.js";
-import ApiError from "../../../utils/apiError.js";
-import asyncHandler from "../../../utils/asyncHandler.js";
-import ApiResponse from "../../../utils/apiResponse.js";
+import Address from "../../models/address.model.js";
+import ApiError from "../../utils/apiError.js";
+import asyncHandler from "../../utils/asyncHandler.js";
+import ApiResponse from "../../utils/apiResponse.js";
 import mongoose from "mongoose";
 
 const deleteAddress = asyncHandler(async (req, res) => {
@@ -24,7 +24,7 @@ const deleteAddress = asyncHandler(async (req, res) => {
   }
 
   // Check if already deleted
-  if (existingAddress.userDeleted) {
+  if (existingAddress.isDeleted) {
     throw new ApiError(400, "Address is already deleted.");
   }
 
@@ -34,7 +34,7 @@ const deleteAddress = asyncHandler(async (req, res) => {
   }
 
   // Mark address as deleted
-  existingAddress.userDeleted = true;
+  existingAddress.isDeleted = true;
   await existingAddress.save();
 
   // Return response
