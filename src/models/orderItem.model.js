@@ -6,6 +6,7 @@ const orderItemSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: [true, "User reference is required"],
+      index: true,
     },
 
     product: {
@@ -189,6 +190,13 @@ const orderItemSchema = new mongoose.Schema(
     isDeleted: {
       type: Boolean,
       default: false,
+      index: true,
+    },
+
+    userDeleted: {
+      type: Boolean,
+      default: false,
+      index: true,
     },
   },
   { timestamps: true }

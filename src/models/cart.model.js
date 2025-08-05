@@ -12,6 +12,7 @@ const cartSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: [true, "Cart must be associated with a user"],
+    index: true,
   },
 });
 

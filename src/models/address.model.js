@@ -33,6 +33,7 @@ const addressSchema = new mongoose.Schema(
     addressLine2: {
       type: String,
       trim: true,
+      required: [true, "Address Line 2 is required"],
       maxlength: [200, "Address Line 2 must not exceed 200 characters"],
     },
 
@@ -61,10 +62,10 @@ const addressSchema = new mongoose.Schema(
 
     country: {
       type: String,
-      required: [true, "Country is required"],
       trim: true,
       minlength: [2, "Country must be at least 2 characters long"],
       maxlength: [100, "Country must not exceed 100 characters"],
+      default: "India",
     },
 
     landmark: {
@@ -83,16 +84,13 @@ const addressSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: [true, "User reference is required"],
-    },
-
-    isDropshipStoreAddress: {
-      type: Boolean,
-      default: false,
+      index: true,
     },
 
     isDeleted: {
       type: Boolean,
       default: false,
+      index: true,
     },
   },
   {

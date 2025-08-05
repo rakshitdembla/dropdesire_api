@@ -1,12 +1,17 @@
-import User from "../../../models/user.model.js";
-import asyncHandler from "../../../utils/asyncHandler.js";
-import ApiError from "../../../utils/apiError.js";
+import User from "../../models/user.model.js";
+import asyncHandler from "../../utils/asyncHandler.js";
+import ApiError from "../../utils/apiError.js";
 import validator from "validator";
-import sanitize from "../../../utils/sanitize.js";
-import ApiResponse from "../../../utils/apiResponse.js";
+import sanitize from "../../utils/sanitize.js";
+import ApiResponse from "../../utils/apiResponse.js";
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { fullName, email, phone, password } = req.body;
+  let { fullName, email, phone, password } = req.body;
+
+  // Trim inputs
+  fullName = fullName?.trim();
+  email = email?.trim();
+  phone = phone?.trim();
 
   // Validate All Fields
   if ([fullName, email, phone, password].some((field) => !field)) {
@@ -79,3 +84,5 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 export default registerUser;
+
+//! Deep sanitize pending - NAME ONLY

@@ -1,10 +1,13 @@
-import User from "../../../models/user.model.js";
-import ApiError from "../../../utils/apiError.js";
-import asyncHandler from "../../../utils/asyncHandler.js";
-import ApiResponse from "../../../utils/apiResponse.js";
+import User from "../../models/user.model.js";
+import ApiError from "../../utils/apiError.js";
+import asyncHandler from "../../utils/asyncHandler.js";
+import ApiResponse from "../../utils/apiResponse.js";
 
 const loginUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  let { email, password } = req.body;
+
+  // Trim inputs
+  email = email?.trim();
 
   if (!email || !password) {
     throw new ApiError(400, "All fields are mandatory");
@@ -45,6 +48,14 @@ const loginUser = asyncHandler(async (req, res) => {
 
   if (!verifyPassword) {
     throw new ApiError(401, "Invalid user credentials");
+  }
+
+  // Check if user is active
+
+  const isUserActive = user.userStatus === "active";
+
+  if (!isUserActive) {
+    throw new ApiError(401, "Your account is no more active.");
   }
 
   // Generate Tokens

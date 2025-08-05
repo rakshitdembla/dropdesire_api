@@ -18,11 +18,13 @@ const couponUsedSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Order",
     required: [true, "Order reference is required"],
+    index: true,
   },
 
   isDeleted: {
     type: Boolean,
     default: false,
+    index: true,
   },
 });
 

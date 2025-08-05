@@ -37,7 +37,11 @@ const dropshipStoreSchema = new mongoose.Schema(
 
     logo: {
       type: String,
-      required: [true, "Store logo is required for branding."],
+      trim: true,
+    },
+
+    logoPublicId: {
+      type: String,
       trim: true,
     },
 
@@ -57,6 +61,7 @@ const dropshipStoreSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: [true, "Store owner (user) reference is required"],
+      index: true,
     },
 
     address: {
@@ -64,9 +69,11 @@ const dropshipStoreSchema = new mongoose.Schema(
       ref: "Address",
       required: [true, "Store address is required"],
     },
+
     isDeleted: {
       type: Boolean,
       default: false,
+      index: true,
     },
   },
   {

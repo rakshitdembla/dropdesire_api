@@ -1,5 +1,5 @@
-import asyncHandler from "../../../utils/asyncHandler.js";
-import ApiResponse from "../../../utils/apiResponse.js";
+import asyncHandler from "../../utils/asyncHandler.js";
+import ApiResponse from "../../utils/apiResponse.js";
 
 const getUser = asyncHandler(async (req, res) => {
   return res.status(200).json(

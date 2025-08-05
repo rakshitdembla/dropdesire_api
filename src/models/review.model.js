@@ -1,15 +1,19 @@
+import mongoose from "mongoose";
+
 const reviewSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: [true, "User reference is required"],
+      index: true,
     },
 
     orderedItem: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "OrderItem",
       required: [true, "orderedItem reference is required"],
+      index: true,
     },
 
     rating: {
@@ -29,6 +33,7 @@ const reviewSchema = new mongoose.Schema(
     isDeleted: {
       type: Boolean,
       default: false,
+      index: true,
     },
 
     images: {

@@ -1,6 +1,13 @@
 import mongoose from "mongoose";
 
 const bankSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: [true, "User reference is required"],
+    index: true,
+  },
+
   upiId: {
     type: String,
     required: [true, "UPI ID is required"],
@@ -44,6 +51,7 @@ const bankSchema = new mongoose.Schema({
   isDeleted: {
     type: Boolean,
     default: false,
+    index: true,
   },
 });
 

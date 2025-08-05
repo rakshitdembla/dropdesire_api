@@ -5,6 +5,7 @@ const variantSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Product",
     required: [true, "Parent product reference is required"],
+    index: true,
   },
 
   title: {
@@ -101,6 +102,7 @@ const variantSchema = new mongoose.Schema({
   isDeleted: {
     type: Boolean,
     default: false,
+    index: true,
   },
 });
 

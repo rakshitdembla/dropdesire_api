@@ -193,6 +193,7 @@ const productSchema = new mongoose.Schema({
   isDeleted: {
     type: Boolean,
     default: false,
+    index: true,
   },
 });
 

@@ -6,6 +6,7 @@ const sellerSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: [true, "User reference is required"],
+      index: true,
     },
 
     bussinessName: {
@@ -87,6 +88,7 @@ const sellerSchema = new mongoose.Schema(
     isDeleted: {
       type: Boolean,
       default: false,
+      index: true,
     },
   },
   { timestamps: true }

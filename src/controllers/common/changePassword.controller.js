@@ -1,7 +1,7 @@
-import User from "../../../models/user.model.js";
-import ApiError from "../../../utils/apiError.js";
-import asyncHandler from "../../../utils/asyncHandler.js";
-import ApiResponse from "../../../utils/apiResponse.js";
+import User from "../../models/user.model.js";
+import ApiError from "../../utils/apiError.js";
+import asyncHandler from "../../utils/asyncHandler.js";
+import ApiResponse from "../../utils/apiResponse.js";
 
 const changeUserPassword = asyncHandler(async (req, res) => {
   const { currentPassword, newPassword } = req.body;

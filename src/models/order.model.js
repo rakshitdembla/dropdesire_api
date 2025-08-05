@@ -6,6 +6,7 @@ const orderSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: [true, "User refrence is required."],
+      index: true,
     },
 
     items: [
@@ -43,6 +44,13 @@ const orderSchema = new mongoose.Schema(
     isDeleted: {
       type: Boolean,
       default: false,
+      index: true,
+    },
+
+    userDeleted: {
+      type: Boolean,
+      default: false,
+      index: true,
     },
   },
   { timestamps: true }

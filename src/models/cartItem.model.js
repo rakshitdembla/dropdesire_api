@@ -5,6 +5,7 @@ const cartItemSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Cart",
     required: [true, "Cart reference is required"],
+    index: true,
   },
 
   product: {

@@ -1,7 +1,7 @@
-import User from "../../../models/user.model.js";
-import ApiError from "../../../utils/apiError.js";
-import asyncHandler from "../../../utils/asyncHandler.js";
-import ApiResponse from "../../../utils/apiResponse.js";
+import User from "../../models/user.model.js";
+import ApiError from "../../utils/apiError.js";
+import asyncHandler from "../../utils/asyncHandler.js";
+import ApiResponse from "../../utils/apiResponse.js";
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
   const refreshToken =
@@ -33,8 +33,26 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       secure: true,
     };
 
-    const accessToken = 
+    const generatedRefreshToken = await user.generateRefreshToken();
+    const generatedAccessToken = await user.generateAccessToken();
+
+    return res
+      .status(200)
+      .cookie("accessToken", generatedAccessToken, options)
+      .cookie("refreshToken", generatedRefreshToken, options)
+      .json(
+        new ApiResponse(
+          200,
+          {
+            accessToken: generatedAccessToken,
+            refrehToken: generatedRefreshToken,
+          },
+          "Access token refreshed"
+        )
+      );
   } catch (e) {
     throw new ApiError(401, error?.message || "Invalid refresh token");
   }
 });
+
+export default refreshAccessToken;
