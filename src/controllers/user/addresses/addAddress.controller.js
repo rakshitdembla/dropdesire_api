@@ -1,7 +1,7 @@
-import Address from "../../models/address.model.js";
-import ApiError from "../../utils/apiError.js";
-import asyncHandler from "../../utils/asyncHandler.js";
-import ApiResponse from "../../utils/apiResponse.js";
+import Address from "../../../models/address.model.js";
+import ApiError from "../../../utils/apiError.js";
+import asyncHandler from "../../../utils/asyncHandler.js";
+import ApiResponse from "../../../utils/apiResponse.js";
 import validator from "validator";
 
 const addAddress = asyncHandler(async (req, res) => {

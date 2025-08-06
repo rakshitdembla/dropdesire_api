@@ -1,7 +1,7 @@
-import Bank from "../../models/bank.model.js";
-import ApiError from "../../utils/apiError.js";
-import asyncHandler from "../../utils/asyncHandler.js";
-import ApiResponse from "../../utils/apiResponse.js";
+import Bank from "../../../models/bank.model.js";
+import ApiError from "../../../utils/apiError.js";
+import asyncHandler from "../../../utils/asyncHandler.js";
+import ApiResponse from "../../../utils/apiResponse.js";
 
 const addBank = asyncHandler(async (req, res) => {
   let { upiId, bankName, accountHolderName, accountNumber, ifscCode } =
