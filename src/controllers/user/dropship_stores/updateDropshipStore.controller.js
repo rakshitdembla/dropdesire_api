@@ -31,7 +31,7 @@ const updateDropshipStore = asyncHandler(async (req, res) => {
 
   storeName = storeName?.trim();
   phone = phone?.trim();
-  email = email?.trim();
+  email = email?.trim().toLowerCase();
   thankyouMessage = thankyouMessage?.trim();
   paymentDetails = paymentDetails?.trim();
   address = address?.trim();

@@ -15,7 +15,7 @@ const addDropshipStore = asyncHandler(async (req, res) => {
   // Trim Inputs
   storeName = storeName?.trim();
   phone = phone?.trim();
-  email = email?.trim();
+  email = email?.trim().toLowerCase();
   thankyouMessage = thankyouMessage?.trim();
   paymentDetails = paymentDetails?.trim();
   address = address?.trim();

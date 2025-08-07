@@ -7,7 +7,7 @@ const loginUser = asyncHandler(async (req, res) => {
   let { email, password } = req.body;
 
   // Trim inputs
-  email = email?.trim();
+  email = email?.trim().toLowerCase();
 
   if (!email || !password) {
     throw new ApiError(400, "All fields are mandatory");

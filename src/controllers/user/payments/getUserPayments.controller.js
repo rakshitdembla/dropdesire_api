@@ -11,3 +11,5 @@ const getUserPayments = asyncHandler(async (req, res) => {
     },
   }).sort({ createdAt: -1 });
 });
+
+export default getUserPayments;

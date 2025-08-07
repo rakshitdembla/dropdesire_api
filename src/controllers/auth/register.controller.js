@@ -4,13 +4,14 @@ import ApiError from "../../utils/apiError.js";
 import validator from "validator";
 import sanitize from "../../utils/sanitize.js";
 import ApiResponse from "../../utils/apiResponse.js";
+import jwt from "jsonwebtoken";
 
 const registerUser = asyncHandler(async (req, res) => {
   let { fullName, email, phone, password } = req.body;
 
   // Trim inputs
   fullName = fullName?.trim();
-  email = email?.trim();
+  email = email?.trim().toLowerCase();
   phone = phone?.trim();
 
   // Validate All Fields
@@ -25,17 +26,6 @@ const registerUser = asyncHandler(async (req, res) => {
 
   //Sanitize Name
   fullName = sanitize(fullName);
-
-  // Validate Email
-  const validateEmail = validator.isEmail(email);
-
-  if (!validateEmail) {
-    throw new ApiError(400, "Please provide a valid email");
-  }
-
-  if (email.length > 254) {
-    throw new ApiError(400, "Email must not exceed 254 characters");
-  }
 
   //Validate password
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,64}$/;
@@ -54,25 +44,25 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid phone number");
   }
 
-  // Check if user already exists
-  const existingUser = await User.findOne({
-    $or: [{ email: email }, { phone: phone }],
-  });
+  // Verify email token
+  let userEmail;
 
-  if (existingUser) {
-    if (existingUser.email === email) {
-      throw new ApiError(409, "Email is already in use");
-    } else if (existingUser.phone === phone) {
-      throw new ApiError(409, "Phone number is already in use");
-    } else {
-      throw new ApiError(409, "User already exists");
+  try {
+    const decodedToken = jwt.verify(email, process.env.EMAIL_SECRET);
+
+    if (decodedToken.type !== "email_verification") {
+      throw new ApiError(400, "Invalid token type.");
     }
+
+    userEmail = decodedToken.email.toLowerCase();
+  } catch (e) {
+    throw new ApiError(400, "Invalid email token provided");
   }
 
   // Create User
   const createdUser = await User.create({
     fullName,
-    email,
+    email: userEmail,
     phone,
     password,
   }).select("-password -refreshToken");

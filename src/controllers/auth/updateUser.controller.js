@@ -19,14 +19,16 @@ const updateUser = asyncHandler(async (req, res) => {
 
   // Validate email (if Exists)
   if (email) {
-    const validateEmail = validator.isEmail(email);
+    try {
+      const decodedToken = jwt.verify(email, process.env.EMAIL_SECRET);
 
-    if (!validateEmail) {
-      throw new ApiError(400, "Please provide a valid email");
-    }
+      if (decodedToken.type !== "email_verification") {
+        throw new ApiError(400, "Invalid token type.");
+      }
 
-    if (email.length > 254) {
-      throw new ApiError(400, "Email must not exceed 254 characters");
+      email = decodedToken.email.toLowerCase();
+    } catch (e) {
+      throw new ApiError(400, "Invalid email token provided");
     }
   }
 
@@ -36,24 +38,6 @@ const updateUser = asyncHandler(async (req, res) => {
 
     if (!validator.isMobilePhone(phoneNumber, "en-IN", { strictMode: true })) {
       throw new ApiError(400, "Invalid phone number");
-    }
-  }
-
-  // Check if already in email or phone already in use (if exists)
-  if (email || phone) {
-    const existingUser = await User.findOne({
-      _id: { $ne: req.user._id },
-      $or: [{ email: email }, { phone: phone }],
-    });
-
-    if (existingUser) {
-      if (existingUser.email === email) {
-        throw new ApiError(409, "Email is already in use");
-      } else if (existingUser.phone === phone) {
-        throw new ApiError(409, "Phone number is already in use");
-      } else {
-        throw new ApiError(409, "User already exists");
-      }
     }
   }
 

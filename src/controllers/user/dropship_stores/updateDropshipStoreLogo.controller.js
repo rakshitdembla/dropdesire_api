@@ -46,7 +46,7 @@ const updateDropshipStoreLogo = asyncHandler(async (req, res) => {
   const uploadedLogoResponse = await uploadOnCloudinary(newLogoPath);
 
   if (!uploadedLogoResponse) {
-    throw new ApiError(401, "Failed to upload new logo on cloud");
+    throw new ApiError(500, "Failed to upload new logo on cloud");
   }
 
   // Delete existing logo from cloud
