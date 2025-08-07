@@ -11,7 +11,18 @@ const verifyOtp = asyncHandler(async (req, res) => {
   otp = otp?.trim();
   email = email?.trim().toLowerCase();
 
-  // Validate otp
+  // Validate inputs
+
+  const validateEmail = validator.isEmail(email);
+
+  if (!validateEmail) {
+    throw new ApiError(400, "Please provide a valid email");
+  }
+
+  if (email.length > 254) {
+    throw new ApiError(400, "Email must not exceed 254 characters");
+  }
+
   if (!otp || otp.length !== 6) {
     throw new ApiError(400, "Please provide a valid 6 digit otp to verify");
   }
