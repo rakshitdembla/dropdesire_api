@@ -6,13 +6,14 @@ import jwt from "jsonwebtoken";
 import validator from "validator";
 
 const verifySmsOtp = asyncHandler(async (req, res) => {
-  let { otp, phoneNumber } = req.body;
+  let { otp, phone } = req.body;
+  const type = "phone_verification";
 
   // Trim and validate inputs
   otp = otp?.trim();
-  phoneNumber = phoneNumber?.trim();
+  phone = phone?.trim();
 
-  const isValidPhone = validator.isMobilePhone(phoneNumber, "en-IN", {
+  const isValidPhone = validator.isMobilePhone(phone, "en-IN", {
     strictMode: true,
   });
 
@@ -25,7 +26,7 @@ const verifySmsOtp = asyncHandler(async (req, res) => {
   }
 
   // Find OTP in DB
-  const getOtp = await Otp.findOne({ phoneNumber });
+  const getOtp = await Otp.findOne({ phone, type });
 
   if (!getOtp) {
     throw new ApiError(400, "Invalid or expired OTP provided.");
@@ -44,8 +45,8 @@ const verifySmsOtp = asyncHandler(async (req, res) => {
   // Generate JWT
   const phoneToken = jwt.sign(
     {
-      phoneNumber: getOtp.phoneNumber,
-      type: "phone_verification",
+      phone: getOtp.phone,
+      type: type,
     },
     process.env.PHONE_SECRET,
     {

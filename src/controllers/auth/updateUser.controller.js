@@ -1,6 +1,5 @@
 import User from "../../models/user.model.js";
 import asyncHandler from "../../utils/asyncHandler.js";
-import validator from "validator";
 import ApiResponse from "../../utils/apiResponse.js";
 import ApiError from "../../utils/apiError.js";
 
@@ -12,12 +11,12 @@ const updateUser = asyncHandler(async (req, res) => {
   email = email?.trim();
   phone = phone?.trim();
 
-  // Validate Full Name (if Exists)
+  // Validate Full Name (if Provided)
   if (fullName && (fullName.length < 2 || fullName.length > 100)) {
     throw new ApiError(400, "Full name must be between 2 and 100 characters");
   }
 
-  // Validate email (if Exists)
+  // Validate email (if Provided)
   if (email) {
     try {
       const decodedToken = jwt.verify(email, process.env.EMAIL_SECRET);
@@ -32,12 +31,18 @@ const updateUser = asyncHandler(async (req, res) => {
     }
   }
 
-  // Validate phone (if Exists)
+  //  Validate phone token (if Provided)
   if (phone) {
-    const phoneNumber = phone.replace(/[\s-]/g, "");
+    try {
+      const decodedToken = jwt.verify(phone, process.env.PHONE_SECRET);
 
-    if (!validator.isMobilePhone(phoneNumber, "en-IN", { strictMode: true })) {
-      throw new ApiError(400, "Invalid phone number");
+      if (decodedToken.type !== "phone_verification") {
+        throw new ApiError(400, "Invalid phone token type.");
+      }
+
+      phone = decodedToken.phoneNumber;
+    } catch (e) {
+      throw new ApiError(400, "Invalid or expired phone token provided.");
     }
   }
 

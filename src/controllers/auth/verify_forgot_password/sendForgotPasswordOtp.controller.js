@@ -9,17 +9,15 @@ import crypto from "crypto";
 
 const RESEND_INTERVAL = 60 * 1000;
 
-const sendOtp = asyncHandler(async (req, res) => {
+const sendForgotPasswordOtp = asyncHandler(async (req, res) => {
   let { email } = req.body;
-  const type = "email_verification";
+  const type = "forgot_password";
 
-  // Trim email
+  // Trim and lowercase email
   email = email?.trim().toLowerCase();
 
   // Validate Email
-  const validateEmail = validator.isEmail(email);
-
-  if (!validateEmail) {
+  if (!validator.isEmail(email)) {
     throw new ApiError(400, "Please provide a valid email");
   }
 
@@ -27,17 +25,14 @@ const sendOtp = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Email must not exceed 254 characters");
   }
 
-  // Check if user already exists with this email
-
+  // Check if user exists
   const user = await User.findOne({ email });
-
-  if (user) {
-    throw new ApiError(400, "User already exists with this email.");
+  if (!user) {
+    throw new ApiError(404, "No account found with this email.");
   }
 
   // Prevent resending too quickly
   const existingOtp = await Otp.findOne({ email, type });
-
   if (
     existingOtp &&
     Date.now() - new Date(existingOtp.updatedAt).getTime() < RESEND_INTERVAL
@@ -62,18 +57,19 @@ const sendOtp = asyncHandler(async (req, res) => {
   );
 
   // 📧 Send OTP Email
-  const subject = "Your OTP for DropDesire Email Verification";
-  const text = `Your OTP is: ${otp}. It is valid for 5 minutes.`;
+  const subject = "Your OTP for DropDesire Password Reset";
+  const text = `Your OTP for resetting your password is: ${otp}. It is valid for 5 minutes.`;
 
   const sendOTP = await sendEmail(email, subject, text);
-
   if (!sendOTP) {
     throw new ApiError(500, "Failed to send OTP.");
   }
 
   return res
     .status(200)
-    .json(new ApiResponse(200, {}, "Otp sent successfully"));
+    .json(
+      new ApiResponse(200, {}, "OTP sent successfully for password reset.")
+    );
 });
 
-export default sendOtp;
+export default sendForgotPasswordOtp;

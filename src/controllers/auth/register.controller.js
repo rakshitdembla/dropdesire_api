@@ -11,7 +11,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   // Trim inputs
   fullName = fullName?.trim();
-  email = email?.trim().toLowerCase();
+  email = email?.trim();
   phone = phone?.trim();
 
   // Validate All Fields
@@ -37,13 +37,6 @@ const registerUser = asyncHandler(async (req, res) => {
     );
   }
 
-  // Validate Phone
-  const phoneNumber = phone.replace(/[\s-]/g, "");
-
-  if (!validator.isMobilePhone(phoneNumber, "en-IN", { strictMode: true })) {
-    throw new ApiError(400, "Invalid phone number");
-  }
-
   // Verify email token
   let userEmail;
 
@@ -55,15 +48,35 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 
     userEmail = decodedToken.email.toLowerCase();
+
+    if (!userEmail) {
+      throw new ApiError(400, "Invalid email token provided");
+    }
   } catch (e) {
     throw new ApiError(400, "Invalid email token provided");
+  }
+
+  // Verify phone token (phone is JWT token)
+  let userPhone;
+  try {
+    const decodedPhoneToken = jwt.verify(phone, process.env.PHONE_SECRET);
+    if (decodedPhoneToken.type !== "phone_verification") {
+      throw new ApiError(400, "Invalid phone token type.");
+    }
+    userPhone = decodedPhoneToken.phoneNumber;
+
+    if (!userPhone) {
+      throw new ApiError(400, "Invalid or expired phone token provided");
+    }
+  } catch (e) {
+    throw new ApiError(400, "Invalid or expired phone token provided");
   }
 
   // Create User
   const createdUser = await User.create({
     fullName,
     email: userEmail,
-    phone,
+    phone: userPhone,
     password,
   }).select("-password -refreshToken");
 

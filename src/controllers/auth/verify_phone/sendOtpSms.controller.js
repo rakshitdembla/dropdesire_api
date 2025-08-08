@@ -9,15 +9,16 @@ import sendSMS from "../../../utils/twilio.js";
 
 const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH);
 const RESEND_INTERVAL = 60 * 1000;
+const type = "phone_verification";
 
 const sendOtpPhone = asyncHandler(async (req, res) => {
-  let { phoneNumber } = req.body;
+  let { phone } = req.body;
 
   // Trim phone number
-  phoneNumber = phoneNumber?.trim();
+  phone = phone?.trim();
 
   // Validate Indian phone number
-  const isValidPhone = validator.isMobilePhone(phoneNumber, "en-IN", {
+  const isValidPhone = validator.isMobilePhone(phone, "en-IN", {
     strictMode: true,
   });
 
@@ -26,14 +27,14 @@ const sendOtpPhone = asyncHandler(async (req, res) => {
   }
 
   // Check if user already exists with this phone number
-  const user = await User.findOne({ phoneNumber });
+  const user = await User.findOne({ phone, type });
 
   if (user) {
     throw new ApiError(400, "User already exists with this phone number.");
   }
 
   // Prevent resending too quickly
-  const existingOtp = await Otp.findOne({ phoneNumber });
+  const existingOtp = await Otp.findOne({ phone, type });
 
   if (
     existingOtp &&
@@ -50,7 +51,7 @@ const sendOtpPhone = asyncHandler(async (req, res) => {
 
   // Save or update OTP
   await Otp.findOneAndUpdate(
-    { phoneNumber },
+    { phone, type },
     {
       otp,
       expiresAt: new Date(Date.now() + 5 * 60 * 1000),
@@ -60,7 +61,7 @@ const sendOtpPhone = asyncHandler(async (req, res) => {
 
   // Send SMS via utility
   const sent = await sendSMS(
-    phoneNumber.startsWith("+91") ? phoneNumber : `+91${phoneNumber}`,
+    phone.startsWith("+91") ? phone : `+91${phone}`,
     otp
   );
 
