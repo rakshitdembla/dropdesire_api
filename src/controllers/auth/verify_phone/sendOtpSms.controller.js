@@ -7,7 +7,6 @@ import validator from "validator";
 import crypto from "crypto";
 import sendSMS from "../../../utils/twilio.js";
 
-const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH);
 const RESEND_INTERVAL = 60 * 1000;
 const type = "phone_verification";
 

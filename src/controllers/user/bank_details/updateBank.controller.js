@@ -3,6 +3,7 @@ import ApiError from "../../../utils/apiError.js";
 import asyncHandler from "../../../utils/asyncHandler.js";
 import ApiResponse from "../../../utils/apiResponse.js";
 import mongoose from "mongoose";
+import sanitize from "../../../utils/sanitize.js";
 
 const updateBankDetails = asyncHandler(async (req, res) => {
   let { bankId } = req.params;
@@ -24,15 +25,17 @@ const updateBankDetails = asyncHandler(async (req, res) => {
     throw new ApiError(401, "Unauthorized to update this bank detail");
   }
 
-  // Extract and sanitize input fields
   let { upiId, bankName, accountHolderName, accountNumber, ifscCode } =
     req.body;
 
-  upiId = upiId?.trim();
-  bankName = bankName?.trim();
-  accountHolderName = accountHolderName?.trim();
-  accountNumber = accountNumber?.trim();
-  ifscCode = ifscCode?.trim();
+  // Trim & Sanitize Inputs
+  [upiId, bankName, accountHolderName, accountNumber, ifscCode] = [
+    upiId,
+    bankName,
+    accountHolderName,
+    accountNumber,
+    ifscCode,
+  ].map((v) => sanitize(v?.trim()));
 
   // Validate fields if provided
   if (upiId && (upiId.length < 5 || upiId.length > 100)) {

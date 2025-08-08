@@ -3,6 +3,7 @@ import ApiError from "../../utils/apiError.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 import ApiResponse from "../../utils/apiResponse.js";
 import validator from "validator";
+import sanitize from "../../../utils/sanitize.js";
 import mongoose from "mongoose";
 
 const updateDropshipStore = asyncHandler(async (req, res) => {
@@ -29,12 +30,10 @@ const updateDropshipStore = asyncHandler(async (req, res) => {
   let { storeName, phone, email, thankyouMessage, paymentDetails, address } =
     req.body;
 
-  storeName = storeName?.trim();
-  phone = phone?.trim();
-  email = email?.trim().toLowerCase();
-  thankyouMessage = thankyouMessage?.trim();
-  paymentDetails = paymentDetails?.trim();
-  address = address?.trim();
+  // Trim and Sanitize Inputs
+  [storeName, thankyouMessage] = [storeName, thankyouMessage].map((v) =>
+    sanitize(v?.trim())
+  );
 
   // Validate fields (only if provided)
   if (storeName && (storeName.length < 2 || storeName.length > 50)) {
@@ -46,6 +45,7 @@ const updateDropshipStore = asyncHandler(async (req, res) => {
   }
 
   if (email) {
+    email = email.toLowerCase();
     if (!validator.isEmail(email)) {
       throw new ApiError(400, "Invalid email format");
     }

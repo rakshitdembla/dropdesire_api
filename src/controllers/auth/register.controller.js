@@ -1,7 +1,6 @@
 import User from "../../models/user.model.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 import ApiError from "../../utils/apiError.js";
-import validator from "validator";
 import sanitize from "../../utils/sanitize.js";
 import ApiResponse from "../../utils/apiResponse.js";
 import jwt from "jsonwebtoken";
@@ -19,13 +18,17 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "All fields are mandatory");
   }
 
+  //Sanitize Name
+  fullName = sanitize(fullName);
+
+  if (!fullName) {
+    throw new ApiError(400, "Invalid full name");
+  }
+
   // Validate Full Name
   if (fullName.length < 2 || fullName.length > 100) {
     throw new ApiError(400, "Full name must be between 2 and 100 characters");
   }
-
-  //Sanitize Name
-  fullName = sanitize(fullName);
 
   //Validate password
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,64}$/;
@@ -87,5 +90,3 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 export default registerUser;
-
-//! Deep sanitize pending - NAME ONLY

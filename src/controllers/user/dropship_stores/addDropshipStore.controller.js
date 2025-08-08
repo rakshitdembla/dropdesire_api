@@ -4,6 +4,7 @@ import asyncHandler from "../../../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../../../utils/cloudinary.js";
 import ApiResponse from "../../../utils/apiResponse.js";
 import validator from "validator";
+import sanitize from "../../../utils/sanitize.js";
 import mongoose from "mongoose";
 
 const addDropshipStore = asyncHandler(async (req, res) => {
@@ -12,19 +13,19 @@ const addDropshipStore = asyncHandler(async (req, res) => {
 
   const logo = req.file?.path;
 
-  // Trim Inputs
-  storeName = storeName?.trim();
-  phone = phone?.trim();
-  email = email?.trim().toLowerCase();
-  thankyouMessage = thankyouMessage?.trim();
-  paymentDetails = paymentDetails?.trim();
-  address = address?.trim();
+  // Trim and Sanitize Inputs
+  [storeName, thankyouMessage] = [storeName, thankyouMessage].map((v) =>
+    sanitize(v?.trim())
+  );
 
   // Check mandatory fields
   if (
     [storeName, phone, email, paymentDetails, address].some((field) => !field)
   ) {
-    throw new ApiError(400, "All fields are mandatory");
+    throw new ApiError(
+      400,
+      "Please ensure all required fields are filled out correctly with valid information."
+    );
   }
 
   // Check User Stores Limit
@@ -133,5 +134,3 @@ const addDropshipStore = asyncHandler(async (req, res) => {
 });
 
 export default addDropshipStore;
-
-//! Deep sanitize pending

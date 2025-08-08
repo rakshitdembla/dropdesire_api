@@ -3,6 +3,7 @@ import ApiError from "../../../utils/apiError.js";
 import asyncHandler from "../../../utils/asyncHandler.js";
 import ApiResponse from "../../../utils/apiResponse.js";
 import validator from "validator";
+import sanitize from "../../../utils/sanitize.js";
 
 const addAddress = asyncHandler(async (req, res) => {
   let {
@@ -17,17 +18,18 @@ const addAddress = asyncHandler(async (req, res) => {
     type,
   } = req.body;
 
-  // Trim inputs
-  fullName = fullName?.trim();
-  phone = phone?.trim();
-  addressLine1 = addressLine1?.trim();
-  addressLine2 = addressLine2?.trim();
-  city = city?.trim();
-  state = state?.trim();
-  landmark = landmark?.trim();
-  type = type?.trim();
+  // Sanitize Inputs
+  [fullName, phone, addressLine1, addressLine2, city, state, landmark, type] = [
+    fullName,
+    phone,
+    addressLine1,
+    addressLine2,
+    city,
+    state,
+    landmark,
+    type,
+  ].map((v) => sanitize(v?.trim()));
 
-  // Convert pincode to Number
   pincode = Number(pincode);
 
   // Check mandatory fields
@@ -43,7 +45,10 @@ const addAddress = asyncHandler(async (req, res) => {
       type,
     ].some((field) => !field)
   ) {
-    throw new ApiError(400, "All fields are mandatory");
+    throw new ApiError(
+      400,
+      "Please ensure all required fields are filled out correctly with valid information."
+    );
   }
 
   // Check User Address Limit
@@ -133,5 +138,3 @@ const addAddress = asyncHandler(async (req, res) => {
 });
 
 export default addAddress;
-
-//! Deep sanitize pending

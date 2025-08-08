@@ -38,14 +38,18 @@ const updateAddress = asyncHandler(async (req, res) => {
     type,
   } = req.body;
 
-  fullName = fullName?.trim();
-  phone = phone?.trim();
-  addressLine1 = addressLine1?.trim();
-  addressLine2 = addressLine2?.trim();
-  city = city?.trim();
-  state = state?.trim();
-  landmark = landmark?.trim();
-  type = type?.trim();
+  // Sanitize Inputs
+  [fullName, phone, addressLine1, addressLine2, city, state, landmark, type] = [
+    fullName,
+    phone,
+    addressLine1,
+    addressLine2,
+    city,
+    state,
+    landmark,
+    type,
+  ].map((v) => sanitize(v?.trim()));
+
   pincode = pincode ? Number(pincode) : undefined;
 
   // Validate fields (only if provided)

@@ -2,6 +2,7 @@ import User from "../../models/user.model.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 import ApiResponse from "../../utils/apiResponse.js";
 import ApiError from "../../utils/apiError.js";
+import sanitize from "../../utils/sanitize.js";
 
 const updateUser = asyncHandler(async (req, res) => {
   let { fullName, email, phone } = req.body;
@@ -11,9 +12,15 @@ const updateUser = asyncHandler(async (req, res) => {
   email = email?.trim();
   phone = phone?.trim();
 
-  // Validate Full Name (if Provided)
-  if (fullName && (fullName.length < 2 || fullName.length > 100)) {
-    throw new ApiError(400, "Full name must be between 2 and 100 characters");
+  // Sanitize & Validate Full Name (if Provided)
+  if (fullName) {
+    fullName = sanitize(fullName);
+    if (!fullName) {
+      throw new ApiError(400, "Invalid full name");
+    }
+    if (fullName.length < 2 || fullName.length > 100) {
+      throw new ApiError(400, "Full name must be between 2 and 100 characters");
+    }
   }
 
   // Validate email (if Provided)
@@ -68,5 +75,3 @@ const updateUser = asyncHandler(async (req, res) => {
 });
 
 export default updateUser;
-
-//! Deep sanitize

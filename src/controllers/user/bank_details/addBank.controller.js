@@ -2,17 +2,20 @@ import Bank from "../../../models/bank.model.js";
 import ApiError from "../../../utils/apiError.js";
 import asyncHandler from "../../../utils/asyncHandler.js";
 import ApiResponse from "../../../utils/apiResponse.js";
+import sanitize from "../../../utils/sanitize.js";
 
 const addBank = asyncHandler(async (req, res) => {
   let { upiId, bankName, accountHolderName, accountNumber, ifscCode } =
     req.body;
 
-  // Trim Inputs
-  upiId = upiId?.trim();
-  bankName = bankName?.trim();
-  accountHolderName = accountHolderName?.trim();
-  accountNumber = accountNumber?.trim();
-  ifscCode = ifscCode?.trim();
+  // Trim & Sanitize Inputs
+  [upiId, bankName, accountHolderName, accountNumber, ifscCode] = [
+    upiId,
+    bankName,
+    accountHolderName,
+    accountNumber,
+    ifscCode,
+  ].map((v) => sanitize(v?.trim()));
 
   // Check mandatory fields
   if (
@@ -20,7 +23,10 @@ const addBank = asyncHandler(async (req, res) => {
       (field) => !field
     )
   ) {
-    throw new ApiError(400, "All fields are mandatory");
+    throw new ApiError(
+      400,
+      "Please ensure all required fields are filled out correctly with valid information."
+    );
   }
 
   // Check if user already has bank linked
