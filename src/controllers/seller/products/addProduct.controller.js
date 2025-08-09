@@ -244,7 +244,7 @@ const addProduct = asyncHandler(async (req, res) => {
     // Link product ID to assets in parallel
     await Promise.all(
       assets.map((el) => {
-        el.productId = product._id;
+        el.product = product._id;
         return el.save();
       })
     );

@@ -26,18 +26,18 @@ const updateProductAsset = asyncHandler(async (req, res) => {
   }
 
   // Find the asset
-  const asset = await ProductAsset.findById(assetId).populate("productId");
+  const asset = await ProductAsset.findById(assetId).populate("product");
 
   if (!asset) {
     throw new ApiError(404, "Asset not found");
   }
 
-  if (!asset.productId) {
+  if (!asset.product) {
     throw new ApiError(400, "Associated product not found");
   }
 
   // Check ownership
-  if (asset.productId.user.toString() !== req.user._id.toString()) {
+  if (asset.product.user.toString() !== req.user._id.toString()) {
     throw new ApiError(401, "You are not authorized to update this product");
   }
 

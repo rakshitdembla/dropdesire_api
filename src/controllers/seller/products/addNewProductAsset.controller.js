@@ -53,7 +53,7 @@ const addNewAsset = asyncHandler(async (req, res) => {
     url: uploadedAsset.url,
     publicId: uploadedAsset.public_id,
     index: product.assets.length,
-    productId: product._id,
+    product: product._id,
   });
 
   // Link asset to product
