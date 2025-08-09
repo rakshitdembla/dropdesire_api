@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema({
-  createdBy: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: [true, "createdBy (user) reference is required"],
+    required: [true, "User reference is required"],
   },
 
   title: {

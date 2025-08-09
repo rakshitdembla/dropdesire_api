@@ -119,7 +119,7 @@ const addDropshipStore = asyncHandler(async (req, res) => {
     paymentDetails,
     user: req.user._id,
     address,
-  }).select("-isDeleted");
+  });
 
   // Send Response
   return res

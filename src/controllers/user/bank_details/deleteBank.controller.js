@@ -5,31 +5,31 @@ import ApiResponse from "../../../utils/apiResponse.js";
 import mongoose from "mongoose";
 
 const deleteBank = asyncHandler(async (req, res) => {
-  let { bankReference } = req.body;
+  let { bankId } = req.params;
 
   // Trim input
-  bankReference = bankReference?.trim();
+  bankId = bankId?.trim();
 
   // Validate ObjectId
-  if (!mongoose.Types.ObjectId.isValid(bankReference)) {
+  if (!mongoose.Types.ObjectId.isValid(bankId)) {
     throw new ApiError(400, "Bank reference ID is not valid");
   }
 
   // Find bank
-  const existingBank = await Bank.findById(bankReference);
+  const bank = await Bank.findById(bankId);
 
   // Check if exists
-  if (!existingBank) {
+  if (!bank) {
     throw new ApiError(404, "Bank account not found");
   }
 
   // Already deleted?
-  if (existingBank.isDeleted) {
+  if (bank.isDeleted) {
     throw new ApiError(400, "Bank account is already deleted");
   }
 
   // Check if bank belongs to the logged-in user
-  if (existingBank.user.toString() !== req.user._id.toString()) {
+  if (bank.user.toString() !== req.user._id.toString()) {
     throw new ApiError(
       401,
       "You are not authorized to delete this bank account"
@@ -37,8 +37,8 @@ const deleteBank = asyncHandler(async (req, res) => {
   }
 
   // Soft delete
-  existingBank.isDeleted = true;
-  await existingBank.save();
+  bank.isDeleted = true;
+  await bank.save();
 
   // Response
   return res

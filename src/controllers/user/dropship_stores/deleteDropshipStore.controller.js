@@ -5,31 +5,31 @@ import ApiResponse from "../../utils/apiResponse.js";
 import mongoose from "mongoose";
 
 const deleteDropshipStore = asyncHandler(async (req, res) => {
-  let { storeRefrence } = req.body;
+  let { storeId } = req.params;
 
-  // Trim store refrence
-  storeRefrence = storeRefrence?.trim();
+  // Trim store reference
+  storeId = storeId?.trim();
 
-  // Validate address refrence
-  if (!mongoose.Types.ObjectId.isValid(storeRefrence)) {
-    throw new ApiError(400, "Dropship store refrence Id is not valid");
+  // Validate store reference
+  if (!mongoose.Types.ObjectId.isValid(storeId)) {
+    throw new ApiError(400, "Dropship store reference Id is not valid");
   }
 
   // Find Dropship Store
-  const existingStore = await DropshipStore.findById(storeRefrence);
+  const store = await DropshipStore.findById(storeId);
 
-  // Check if address exists
-  if (!existingStore) {
+  // Check if store exists
+  if (!store) {
     throw new ApiError(404, "Dropship store not found");
   }
 
   // Check if already deleted
-  if (existingStore.isDeleted) {
-    throw new ApiError(400, "Dropship Store is already deleted.");
+  if (store.isDeleted) {
+    throw new ApiError(400, "Dropship store is already deleted.");
   }
 
-  // Check store associated user
-  if (existingStore.user.toString() !== req.user._id.toString()) {
+  // Check store ownership
+  if (store.user.toString() !== req.user._id.toString()) {
     throw new ApiError(
       401,
       "You are not authorized to delete this dropship store"
@@ -37,8 +37,8 @@ const deleteDropshipStore = asyncHandler(async (req, res) => {
   }
 
   // Mark store as deleted
-  existingStore.isDeleted = true;
-  await existingStore.save();
+  store.isDeleted = true;
+  await store.save();
 
   // Return response
   return res

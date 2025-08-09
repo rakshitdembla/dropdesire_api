@@ -220,7 +220,7 @@ const addProduct = asyncHandler(async (req, res) => {
 
     // Create product
     const product = await Product.create({
-      createdBy: req.user._id,
+      user: req.user._id,
       soldBy: req.seller._id,
       title,
       description,

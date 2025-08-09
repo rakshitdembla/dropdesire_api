@@ -76,17 +76,27 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   // Create User
-  const createdUser = await User.create({
+  let createdUser = await User.create({
     fullName,
     email: userEmail,
     phone: userPhone,
     password,
-  }).select("-password -refreshToken");
+  });
+
+  createdUser = createdUser.toObject();
+  delete createdUser.password;
+  delete createdUser.refreshToken;
 
   //Return Success Response
-  return res
-    .status(201)
-    .json(new ApiResponse(201, createdUser, "User registered Successfully"));
+  return res.status(201).json(
+    new ApiResponse(
+      201,
+      {
+        user: createdUser,
+      },
+      "User registered Successfully"
+    )
+  );
 });
 
 export default registerUser;

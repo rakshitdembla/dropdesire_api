@@ -5,37 +5,37 @@ import ApiResponse from "../../../utils/apiResponse.js";
 import mongoose from "mongoose";
 
 const deleteAddress = asyncHandler(async (req, res) => {
-  let { address } = req.body;
+  let { addressId } = req.params;
 
-  // Trim address refrence
-  address = address?.trim();
+  // Trim address reference
+  addressId = addressId?.trim();
 
-  // Validate address refrence
-  if (!mongoose.Types.ObjectId.isValid(address)) {
-    throw new ApiError(400, "Address refrence Id is not valid");
+  // Validate address reference
+  if (!mongoose.Types.ObjectId.isValid(addressId)) {
+    throw new ApiError(400, "Address reference Id is not valid");
   }
 
   // Find address
-  const existingAddress = await Address.findById(address);
+  const address = await Address.findById(addressId);
 
   // Check if address exists
-  if (!existingAddress) {
+  if (!address) {
     throw new ApiError(404, "Address not found");
   }
 
   // Check if already deleted
-  if (existingAddress.isDeleted) {
+  if (address.isDeleted) {
     throw new ApiError(400, "Address is already deleted.");
   }
 
   // Check address associated user
-  if (existingAddress.user.toString() !== req.user._id.toString()) {
+  if (address.user.toString() !== req.user._id.toString()) {
     throw new ApiError(401, "You are not authorized to delete this address");
   }
 
   // Mark address as deleted
-  existingAddress.isDeleted = true;
-  await existingAddress.save();
+  address.isDeleted = true;
+  await address.save();
 
   // Return response
   return res

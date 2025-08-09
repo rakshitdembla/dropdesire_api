@@ -9,14 +9,14 @@ import ApiResponse from "../../utils/apiResponse.js";
 import mongoose from "mongoose";
 
 const updateDropshipStoreLogo = asyncHandler(async (req, res) => {
-  let { storeRefrence } = req.params;
+  let { storeId } = req.params;
   const newLogoPath = req.file?.path;
 
   // Trim Input
-  storeRefrence = storeRefrence?.trim();
+  storeId = storeId?.trim();
 
   // Validate store reference
-  if (!mongoose.Types.ObjectId.isValid(storeRefrence)) {
+  if (!mongoose.Types.ObjectId.isValid(storeId)) {
     throw new ApiError(400, "Invalid store reference ID");
   }
 
@@ -26,7 +26,7 @@ const updateDropshipStoreLogo = asyncHandler(async (req, res) => {
   }
 
   // Find the store
-  const store = await DropshipStore.findById(storeRefrence);
+  const store = await DropshipStore.findById(storeId);
 
   if (!store) {
     throw new ApiError(404, "Dropship store not found");

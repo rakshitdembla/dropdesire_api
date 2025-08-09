@@ -6,6 +6,7 @@ const productAssetSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Product",
     },
+
     type: {
       type: String,
       enum: {
@@ -15,19 +16,27 @@ const productAssetSchema = new mongoose.Schema(
       required: [true, "Asset type is required"],
       trim: true,
     },
+
     url: {
       type: String,
       required: [true, "Asset URL is required"],
       trim: true,
     },
+
     publicId: {
       type: String,
       required: [true, "Public ID is required"],
       trim: true,
     },
+
     index: {
       type: Number,
       required: [true, "Asset index is required"],
+    },
+
+    isDeleted: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }
