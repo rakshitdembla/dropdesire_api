@@ -74,8 +74,8 @@ const productSchema = new mongoose.Schema({
   brand: {
     type: String,
     trim: true,
-    minlength: [2, "brand should be at least 2 characters long"],
-    maxlength: [64, "Email must not exceed 64 characters"],
+    minlength: [2, "Brand should be at least 2 characters long"],
+    maxlength: [64, "Brand must not exceed 64 characters"],
     lowercase: true,
   },
 
@@ -95,20 +95,22 @@ const productSchema = new mongoose.Schema({
     default: false,
   },
 
+  primaryPhoto: {
+    type: String,
+    required: [true, "Primary photo of product is required."],
+    trim: true,
+  },
+
+  primaryPhotoPublicId: {
+    type: String,
+    required: [true, "Primary photo of public Id is required."],
+    trim: true,
+  },
+
   assets: [
     {
-      type: {
-        type: String,
-        enum: {
-          values: ["image", "video"],
-          message: "{VALUE} is not a valid asset format.",
-        },
-        required: [true, "Asset type is required"],
-      },
-      url: {
-        type: String,
-        required: [true, "Asset URL is required"],
-      },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "ProductAsset",
     },
   ],
 
@@ -124,6 +126,13 @@ const productSchema = new mongoose.Schema({
     required: [true, "MRP is required"],
     min: [1, "MRP must be at least ₹1"],
     max: [999999, "MRP must not exceed ₹999,999"],
+  },
+
+  basePrice: {
+    type: Number,
+    required: [true, "Base price (without tax) is required"],
+    min: [1, "Base price must be at least ₹1"],
+    max: [999999, "Base price must not exceed ₹999,999"],
   },
 
   dimensions: {
@@ -143,11 +152,12 @@ const productSchema = new mongoose.Schema({
   isAvailable: {
     type: Boolean,
     required: true,
+    default: false,
   },
 
   hasVariants: {
     type: Boolean,
-    required: true,
+    default: false,
   },
 
   variants: [
@@ -176,6 +186,7 @@ const productSchema = new mongoose.Schema({
     required: [true, "Shipping charge is required"],
     min: [0, "Shipping charge cannot be negative"],
     max: [999, "Shipping charge must not exceed ₹999"],
+    default: 0,
   },
 
   approvalStatus: {

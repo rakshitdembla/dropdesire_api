@@ -1,7 +1,6 @@
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiError from "../utils/apiResponse.js";
 import Seller from "../models/seller.model.js";
-import { verify } from "jsonwebtoken";
 
 const verifySeller = asyncHandler(async (req, _, next) => {
   const user = req.user;
@@ -17,6 +16,7 @@ const verifySeller = asyncHandler(async (req, _, next) => {
   }
 
   if (seller.sellerStatus === "approved") {
+    req.seller = seller;
     next();
   } else if (seller.sellerStatus === "pending") {
     throw new ApiError(401, "Your seller account approval is pending.");
